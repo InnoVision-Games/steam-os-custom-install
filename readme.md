@@ -46,8 +46,11 @@ Use a partition tool like:
 
 Once in the SteamOS installer desktop:
 
-1. Copy the script`steam-os-custom-install.sh` to your **Desktop**.
-2. Open the terminal and apply permissions by running:
+1. Open terminal and copy the script`steam-os-custom-install.sh` to your **Desktop**.
+```bash
+wget https://raw.githubusercontent.com/sorialexandre/steam-os-custom-install/refs/heads/main/steam-os-custom-install.sh -O ~/Desktop/steam-os-custom-install.sh
+```
+2. Apply permissions by running:
 ```bash
 sudo chmod +x ./Desktop/steam-os-custom-install.sh
 ```
