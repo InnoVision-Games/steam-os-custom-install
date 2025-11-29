@@ -52,11 +52,11 @@ wget https://raw.githubusercontent.com/sorialexandre/steam-os-custom-install/ref
 ```
 2. Apply permissions by running:
 ```bash
-sudo chmod +x ./Desktop/steam-os-custom-install.sh
+sudo chmod +x ~/Desktop/steam-os-custom-install.sh
 ```
 3. Launch the installer from the terminal with:
 ```bash
-sudo ./Desktop/steam-os-custom-install.sh
+sudo ~/Desktop/steam-os-custom-install.sh
 ```
 
 ---
