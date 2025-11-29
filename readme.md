@@ -28,7 +28,7 @@ It is designed to work with devices like the **Lenovo Legion Go** (or similar), 
 
 ### 1️⃣ Boot with SteamOS USB Media
 
-Download the official [SteamOS recovery image](https://store.steampowered.com/steamos/) and flash it to a USB drive. Boot your system using the USB stick into the **SteamOS desktop installer environment**.
+Download the official [SteamOS recovery image](https://help.steampowered.com/en/faqs/view/65B4-2AA3-5F37-4227) and flash it to a USB drive. Boot your system using the USB stick into the **SteamOS desktop installer environment**.
 
 ---
 
@@ -47,7 +47,7 @@ Use a partition tool like:
 Once in the SteamOS installer desktop:
 
 1. Copy the script`steam-os-custom-install.sh` to your **Desktop**.
-2. Open the terminal and apply execute permissions by running:
+2. Open the terminal and apply permissions by running:
 ```bash
 sudo chmod +x ./Desktop/steam-os-custom-install.sh
 ```
