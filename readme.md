@@ -48,7 +48,7 @@ Once in the SteamOS installer desktop:
 
 1. Open terminal and copy the script`steam-os-custom-install.sh` to your **Desktop**.
 ```bash
-wget https://raw.githubusercontent.com/sorialexandre/steam-os-custom-install/refs/heads/main/steam-os-custom-install.sh -O ~/Desktop/steam-os-custom-install.sh
+wget https://raw.githubusercontent.com/InnoVision-Games/steam-os-custom-install/refs/heads/main/steam-os-custom-install.sh -O ~/Desktop/steam-os-custom-install.sh
 ```
 2. Apply permissions by running:
 ```bash
