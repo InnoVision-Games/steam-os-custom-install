@@ -4,6 +4,25 @@ set -eu
 ##############################################################################
 # Utility Functions
 ##############################################################################
+_sh_c_colors=0
+[[ -n $TERM && -t 1 && ${TERM,,} != dumb ]] && _sh_c_colors="$(tput colors 2>/dev/null || echo 0)"
+sh_c() { [[ $_sh_c_colors -le 0 ]] || ( IFS=\; && echo -n $'\e['"${*:-0}m"; ); }
+
+sh_quote() { echo "${@@Q}"; }
+estat()    { echo >&2 "$(sh_c 32 1)::$(sh_c) $*"; }
+emsg()     { echo >&2 "$(sh_c 34 1)::$(sh_c) $*"; }
+ewarn()    { echo >&2 "$(sh_c 33 1);;$(sh_c) $*"; }
+einfo()    { echo >&2 "$(sh_c 30 1)::$(sh_c) $*"; }
+eerr()     { echo >&2 "$(sh_c 31 1)!!$(sh_c) $*"; }
+die() { local msg="$*"; [[ -n $msg ]] || msg="script terminated"; eerr "$msg"; exit 1; }
+showcmd() { showcmd_unquoted "${@@Q}"; }
+showcmd_unquoted() { echo >&2 "$(sh_c 30 1)+$(sh_c) $*"; }
+cmd() { showcmd "$@"; "$@"; }
+
+# Helper to format
+fmt_ext4()  { [[ $# -eq 2 && -n $1 && -n $2 ]] || die; cmd sudo mkfs.ext4 -F -L "$1" "$2"; }
+fmt_fat32() { [[ $# -eq 2 && -n $1 && -n $2 ]] || die; cmd sudo mkfs.vfat -n"$1" "$2"; }
+
 die() {
   echo >&2 "!! $*"
   exit 1
@@ -96,8 +115,18 @@ prompt_step "Custom SteamOS Install" \
   "This action installs SteamOS on this device. You can either wipe the entire disk or create new partitions by specifying their indices.\n\nWARNING: Ensure that sufficient unallocated space exists and you understand the risks."
 
 # Target disk – be very careful with this.
-DISK=/dev/nvme0n1
-DISK_SUFFIX="p" # Adjust if your disk device does not use a 'p' suffix (e.g. /dev/sda1)
+DISK=$(zenity --entry --title="Enter Installation Destination" --text="Enter NVME SSD or other Disk:" --entry-text="/dev/nvme0n1") || exit 1
+
+# Adjust if your disk device does not use a 'p' suffix (e.g. /dev/sda1)
+DISK_SUFFIX=$(zenity --entry --title="Enter Disk Device Suffix" --text="Enter your SSD installation Suffix:" --entry-text="p") || exit 1
+
+# Eventually this should be expanded to a list of supported disk types
+NVME_SUBSTRING="nvme"
+if [[ "$DISK" != *"$NVME_SUBSTRING"* ]]; then
+  zenity --question \
+  --title="Uncommon Installation Type Detected!" \
+  --text="WARNING installing to a non NVME SSD is not considered a best practice!\n\nYou acknowledge this is an unusual setup but want to proceed.";
+fi
 
 # Partition sizes in MiB for SteamOS:
 PART_SIZE_ESP="256"
@@ -114,7 +143,11 @@ if zenity --question \
     --title="Confirm Disk Wipe" \
     --text="⚠️ WARNING: This will erase ALL DATA on the disk! \n\nAre you absolutely sure you want to continue?"; then
 
-    sanitize_all
+    if [[ "$DISK" != *"$NVME_SUBSTRING"* ]]; then
+      log "Skipping Disk Sanitization non NVME SSD detected..."
+    else
+      sanitize_all
+    fi
     writePartitionTable=1 # Enable full disk wipe
     FS_ESP=1
     FS_EFI_A=2
